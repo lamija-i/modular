@@ -15,7 +15,8 @@ from collections import OptionalReg
 from itertools import product
 from math import ceildiv, recip
 from math.constants import log2e
-from memory import LegacyUnsafePointer as UnsafePointer
+from memory.pointer import UnsafePointer
+from memory.pointer import AddressSpace
 from sys import align_of, simd_width_of, size_of, llvm_intrinsic
 from sys.intrinsics import readfirstlane
 from sys.info import _cdna_4_or_newer
@@ -374,7 +375,9 @@ struct KVBuffer[
         head_idx: UInt,
         shared_ptr: UnsafePointer[
             Scalar[Self.kv_t.dtype],
-            address_space = AddressSpace.SHARED, **_,
+            mut=True,
+            address_space=AddressSpace.SHARED,
+            MutAnyOrigin,
         ],
         end: UInt,
     ):
