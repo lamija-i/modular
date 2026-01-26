@@ -13,7 +13,8 @@
 
 from collections import OptionalReg
 from math import ceildiv
-from memory import LegacyUnsafePointer as UnsafePointer
+from memory.pointer import UnsafePointer
+from memory.pointer import AddressSpace
 from sys.info import _cdna_4_or_newer
 from sys import env_get_bool
 
@@ -221,8 +222,17 @@ __extension Attention:
     @always_inline
     fn mha_decoding(
         mut self,
-        exp_sum_ptr: UnsafePointer[Scalar[get_accum_type[Self.q_type]()]],
-        qk_max_ptr: UnsafePointer[Scalar[get_accum_type[Self.q_type]()]],
+        exp_sum_ptr: UnsafePointer[
+            Scalar[get_accum_type[Self.q_type]()],
+            mut=True,
+            AddressSpace.GENERIC
+        ],
+        qk_max_ptr: UnsafePointer[
+            Scalar[get_accum_type[Self.q_type]()],
+            mut=True,
+            AddressSpace.GENERIC
+        ],
+
         num_partitions: Int,
     ):
         constrained[Self.BK == 32, "BK must be 32"]()
